@@ -10,6 +10,8 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/googletest)
 enable_testing()
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
+#spdlog
+include_directories(${PROJECT_SOURCE_DIR}/3rdparty/spdlog/include/)
 
 # test
 add_subdirectory(test)
