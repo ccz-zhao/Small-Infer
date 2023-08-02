@@ -4,20 +4,18 @@ project(Small-Infer)
 # GoogleTest requires at least C++14
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(SINFER_ROOT_DIR ${CMAKE_SOURCE_DIR})
+set(SINFER_INC ${SINFER_ROOT_DIR}/include)
+set(SPDLOG_INC ${SINFER_ROOT_DIR}/3rdparty/spdlog/include/)
 
-set(SPDLOG_INC ${PROJECT_SOURCE_DIR}/3rdparty/spdlog/include/)
-set(SINFER_INC ${PROJECT_SOURCE_DIR}/include/)
 
-aux_source_directory(./src/data DIR_DATA)
+aux_source_directory(${SINFER_ROOT_DIR}/src/data DIR_DATA)
+aux_source_directory(${SINFER_ROOT_DIR}/src/utils/ DIR_UTILS)
+add_library(sinfer SHARED ${DIR_UTILS} ${DIR_DATA})
 
-add_library(sinfer SHARED ${SINFER_INC} ${DIR_DATA})
+target_include_directories(sinfer PUBLIC ${SINFER_INC} ${SPDLOG_INC})
 
-#Unit test
-add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/googletest)
-enable_testing()
-
-target_include_directories(sinfer PUBLIC ${gtest_SOURCE_DIR}/include)
-target_include_directories(sinfer PUBLIC ${SPDLOG_INC})
 
 # test
+add_subdirectory(${SINFER_ROOT_DIR}/3rdparty/googletest)
 add_subdirectory(test)

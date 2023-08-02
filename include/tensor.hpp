@@ -3,7 +3,6 @@
 #include "types.h"
 #include "make_vector.hpp"
 
-#include "gmock/gmock.h"
 #include <algorithm>
 #include <vector>
 #include <memory>
