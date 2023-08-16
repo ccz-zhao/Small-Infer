@@ -4,6 +4,7 @@
 #include "make_vector.hpp"
 
 #include <algorithm>
+#include <cstring>
 #include <vector>
 #include <memory>
 
@@ -23,6 +24,10 @@ public:
 
     T& operator[](const std::vector<int>& indices);
     const T& operator[](const std::vector<int>& indices) const;
+    template<typename...Args>
+    T& operator[](Args...args);
+    template<typename...Args>
+    const T& operator[](Args...args) const;
 
     auto get_dimensions() const -> std::vector<int> {return dims_;}
     T* get_data() {return data_;}
@@ -53,6 +58,7 @@ Tensor<T>::Tensor(const std::vector<int>& dims)
         size *= d;
     }
     data_ = new T[size];
+    memset(data_, 0, size); // default 0
 }
 
 template<typename T>
@@ -112,7 +118,7 @@ template<typename T>
 T& Tensor<T>::operator[](const std::vector<int>& indices) {
     int index = 0;
     int stride = 1;
-    for (size_t i = dims_.size()-1; i >= 0; --i) {
+    for (int i = dims_.size()-1; i >= 0; --i) {
         index += stride * indices[i];
         stride *= dims_[i];
     }
@@ -123,7 +129,7 @@ template<typename T>
 const T& Tensor<T>::operator[](const std::vector<int>& indices) const {
     int index = 0;
     int stride = 1;
-    for (size_t i = dims_.size()-1; i >= 0; --i) {
+    for (int i = dims_.size()-1; i >= 0; --i) {
         index += stride * indices[i];
         stride *= dims_[i];
     }
@@ -138,5 +144,16 @@ Tensor<T>::Tensor(Args...args)
 
 }
 
+template<typename T>
+template<typename ...Args>
+T& Tensor<T>::operator[](Args...args) {
+    return operator[](make_vector<int>(args...));
+}
+
+template<typename T>
+template<typename ...Args>
+const T& Tensor<T>::operator[](Args...args) const {
+    return operator[](make_vector<int>(args...));
+}
 
 }   // namespace sinfer
